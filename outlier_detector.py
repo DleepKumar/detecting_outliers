@@ -2,20 +2,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn
-import seaborn as snn
+import seaborn as sns
 from Zscore import df
 
-def outlier(data=df,column=None):
-    q1,q3 =np.percentile(data[column],[25,75])
-    iqr=q3-q1
-    lower_bound = q1 - 1.5 * iqr
-    upper_bound = q3 + 1.5 * iqr
-    without_outliers=data[(data[column] > lower_bound) | (data[column] < upper_bound)]
-    outliers=data[(data[column] < lower_bound) | (data[column] > upper_bound)]
-    snn.boxplot(without_outliers)
+def removal_box_plot(data,column,thresold):
+    sns.boxplot(data[column])
+    plt.title(f"original box plot of {column}")
     plt.show()
-    return outliers
-    
-print(outlier(df,"bmi"))    
+    removed_outliers=data[data[column]<=thresold]
+    sns.boxplot(removed_outliers[column])
+    plt.title(f"without outliers box plot of {column}")
+    plt.show()
+    return removed_outliers
+
+print(removal_box_plot(df,"bmi",0.12))    
     
 
